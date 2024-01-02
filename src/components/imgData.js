@@ -6,5 +6,5 @@ export const imageData = [
     {id:3, imgName: "Smoke", imgSrc: "images/smoke.png"},
     {id:4, imgName: "Storm", imgSrc: "images/storm.png"},
     {id:4, imgName: "Snow", imgSrc: "images/snow.png"},
-    {id:4, imgName: "Haza", imgSrc: "images/hazardous.png"},
+    {id:4, imgName: "Haze", imgSrc: "images/haze.png"},
 ]

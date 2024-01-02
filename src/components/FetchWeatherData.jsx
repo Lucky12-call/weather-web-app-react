@@ -15,7 +15,6 @@ const FetchWeatherData = () => {
       return data;
     }
   });
-
   const weatherCondition = data?.weather.map((dis) => dis.main);
 
   return (
