@@ -1,83 +1,87 @@
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { imageData } from "./imgData";
+/* eslint-disable react/prop-types */
+import { IoSearch } from "react-icons/io5";
+import { BsCloudSleet, BsCloudFog, BsCloudRain } from "react-icons/bs";
+import { RiMistFill } from "react-icons/ri";
+import { TiWeatherSunny, TiWeatherStormy, TiWeatherSnow } from "react-icons/ti";
+import { LuCloudSun } from "react-icons/lu";
 
-const FetchWeatherData = () => {
-  const [city, setCity] = useState("jaipur");
+const FetchWeatherData = ({ data, city, setCity, refetch }) => {
+  const handleClick = () => {
+    refetch();
+    setCity("");
+  };
 
-  const API_KEY = "bf19e5a496586e602c553fb9a6a9776e"; 
-
-  const { data, refetch } = useQuery({
-    queryKey: ["weather"],
-    queryFn: async () => {
-      const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
-      return data;
+  const getIcon = () => {
+    switch (data?.weather[0].main) {
+      case "Haze":
+        return <BsCloudSleet size={60} />;
+      case "Mist":
+        return <RiMistFill size={60} />;
+      case "Fog":
+        return <BsCloudFog size={60} />;
+      case "Clear":
+        return <TiWeatherSunny size={60} />;
+      case "Storm":
+        return <TiWeatherStormy size={60} />;
+      case "Snow":
+        return <TiWeatherSnow size={60} />;
+      case "Clouds":
+        return <LuCloudSun size={60} />;
+      case "Rain  ":
+        return <BsCloudRain size={60} />;
+      default:
+        <h1>no icon</h1>;
+        break;
     }
-  });
-  const weatherCondition = data?.weather.map((dis) => dis.main);
+  };
 
   return (
-    <section className="h-full w-full lg:h-5/6 lg:w-2/5 flex flex-col justify-around items-center bg-indigo-100 rounded-lg shadow-[0_0_15px_gray]">
+    <section className="bg-glass text-white h-full w-full lg:w-2/5 flex flex-col pag-5 items-center p-5 rounded-lg">
+      <div className="h-40 w-full text-white rounded-lg">
+        <div className="flex justify-center my-5">{getIcon()}</div>
+        <h1 className="text-2xl font-semibold text-center">
+          {data?.weather[0].main}
+        </h1>
+      </div>
+
       {/* search bar */}
-      <div className="h-auto w-4/5 flex justify-center items-center bg-white mt-5 rounded-md">
+      <div className="h-auto w-full flex justify-center items-center border-b-2 border-white mt-5 ">
         <input
           type="text"
-          className="px-5 py-3 outline-none rounded-lg w-full"
+          className="px-4 py-1.5  focus:outline-none bg-transparent rounded-lg w-full"
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
 
-        <button type="button" onClick={() => refetch()}>
-          <img
-            src="images/search.png"
-            className="h-6 cursor-pointer px-5"
-            alt="searchIcon"
-          />
+        <button type="button" onClick={handleClick}>
+          <IoSearch size={20} className="mx-3" />
         </button>
       </div>
 
-      {/* main image */}
-      <div className="mt-5 flex flex-col justify-center items-center">
-        {imageData.map((image) => {
-          if (weatherCondition == image.imgName) {
-            return (
-              <img
-                src={image.imgSrc}
-                alt={image.imgName}
-                key={image.id}
-                className="drop-shadow-xl"
-              />
-            );
-          }
-        })}
-        <h1 className="text-2xl text-bold">
-          {data?.weather.map((dis) => dis.description)}
-        </h1>
-      </div>
-
-      {/* temperature and city section */}
-      <div className="mt-5 flex flex-col justify-center items-center">
-        <h1 className="text-5xl text-bold">{Math.round(data?.main.temp)}°C</h1>
-        <h1 className="text-5xl text-bold">{data?.name}</h1>
-      </div>
-
       {/* humidity and wind speed section */}
-      <div className="flex flex-col md:flex-row m-2 md:justify-around items-center w-full mt-5">
-        <div className="flex items-center justify-around text-bold text-2xl">
-          <img src="images/humidity.png" className="h-16 mr-2" alt="humidity" />
-          <div className="my-5">
-            <h1>{data?.main.humidity}%</h1>
-            <h1>Humidity</h1>
-          </div>
+      <div className="w-full mt-5 divide-y-2 divide-solid divide-gray-600">
+        <h1 className="text-xl text-bold text-center py-2">
+          {data?.name}, {data?.sys.country}
+        </h1>
+
+        <div className="flex items-center justify-between text-bold py-2 transition-all duration-1000">
+          <h1>Temperature</h1>
+          <h1>{Math.round(data?.main.temp)}°C</h1>
         </div>
 
-        <div className="flex items-center justify-around text-bold text-2xl">
-          <img src="images/wind.png" className="h-16 mr-2" alt="wind" />
-          <div className="my-5">
-            <h1>{data?.wind.speed} km/h</h1>
-            <h1>Wind Speed</h1>
-          </div>
+        <div className="flex items-center justify-between text-bold py-2">
+          <h1>Humidity</h1>
+          <h1>{data?.main.humidity}%</h1>
+        </div>
+
+        <div className="flex items-center justify-between text-bold py-2">
+          <h1>Visibility</h1>
+          <h1>{data?.visibility} mi</h1>
+        </div>
+
+        <div className="flex items-center justify-between text-bold py-2">
+          <h1>Wind Speed</h1>
+          <h1>{data?.wind.speed} km/h</h1>
         </div>
       </div>
     </section>

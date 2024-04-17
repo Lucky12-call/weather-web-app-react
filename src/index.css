@@ -4,8 +4,11 @@
 
 @layer {
     .bg-img {
-        background-image: url('images/weather-img.jpeg');
-        background-position: center;
+        background-image: url('https://www.manheimtownship.org/ImageRepository/Document?documentID=4716');
         background-repeat: no-repeat;
+        object-fit: contain;
+    }
+    .bg-glass {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
     }
 }
